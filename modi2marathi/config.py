@@ -15,7 +15,7 @@ except ImportError:
 # ========== ✅ Mount Google Drive if in Colab ==========
 if IN_COLAB:
     from google.colab import drive
-    # drive.mount('/content/drive', force_remount=True)
+    drive.mount('/content/drive', force_remount=True)
     BASE_DIR = "/content/drive/MyDrive/modi2marathi"
 else:
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -93,3 +93,4 @@ with open(IDX_TO_CHAR_PATH, "r", encoding="utf-8") as f:
     IDX_TO_CHAR = {int(k): v for k, v in json.load(f).items()}
 
 NUM_CLASSES = len(CHAR_TO_IDX)  # No +1; blank=0 already handled by CTC setup
+
