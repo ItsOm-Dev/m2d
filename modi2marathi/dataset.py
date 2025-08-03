@@ -83,6 +83,7 @@ class ResizeKeepAspect:
         self.max_width = max_width
 
     def __call__(self, img):
+        img = img.convert("L") #Enures grayscale image
         orig_w, orig_h = img.size
         new_w = int(orig_w * self.target_height / orig_h)
         img = TF.resize(img, (self.target_height, new_w))
