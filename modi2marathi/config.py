@@ -55,8 +55,8 @@ DRIVE_BASE = "/content/drive/MyDrive/modi2marathi"
 
 # ========== ✅ Define Dataset and Checkpoint Paths ==========
 #######################CURRENT DATASET: SYNTHETIC (SynthMoDe)####################################
-IMAGE_DIR = os.path.join(BASE_DIR, "modi_dataset_syn/images")
-LABEL_DIR = os.path.join(BASE_DIR, "modi_dataset_syn/labels")
+# IMAGE_DIR = os.path.join(BASE_DIR, "modi_dataset_syn/images")
+# LABEL_DIR = os.path.join(BASE_DIR, "modi_dataset_syn/labels")
 # CHAR_TO_IDX_PATH = os.path.join(BASE_DIR, "modi_dataset_syn/char_to_idx.json")
 # IDX_TO_CHAR_PATH = os.path.join(BASE_DIR, "modi_dataset_syn/idx_to_char.json")
 
@@ -83,7 +83,7 @@ def get_checkpoint_path(epoch):
 
 # ========== ✅ Training Hyperparameters ==========
 BATCH_SIZE = 4
-EPOCHS = 44  # 45 WILL BE SEMI FINAL
+EPOCHS = 55  # 45 WILL BE SEMI FINAL
 LEARNING_RATE = 1e-4
 IMG_HEIGHT = 128
 IMG_WIDTH = 720
@@ -214,5 +214,6 @@ if __name__ == "__main__":
 #     print("IMAGE_DIR:", IMAGE_DIR)
 #     print("LABEL_DIR:", LABEL_DIR)
 #     print("CHECKPOINT_DIR:", CHECKPOINT_DIR)
+
 
 
