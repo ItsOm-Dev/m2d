@@ -211,13 +211,11 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 NUM_WORKERS = multiprocessing.cpu_count()
 
 # ========== ✅ Load Vocabulary ==========
+with open(CHAR_TO_IDX_PATH, "r", encoding="utf-8") as f:
+    CHAR_TO_IDX = json.load(f)
+
 with open(IDX_TO_CHAR_PATH, "r", encoding="utf-8") as f:
-    idx_to_char_raw = json.load(f)
-    if isinstance(list(idx_to_char_raw.keys())[0], str) and not list(idx_to_char_raw.keys())[0].isdigit():
-        # keys are characters like '<pad>', 'अ', etc.
-        IDX_TO_CHAR = {v: k for k, v in idx_to_char_raw.items()}
-    else:
-        IDX_TO_CHAR = {int(k): v for k, v in idx_to_char_raw.items()}
+    IDX_TO_CHAR = {int(k): v for k, v in json.load(f).items()}
 
 NUM_CLASSES = len(CHAR_TO_IDX)
 
@@ -241,4 +239,5 @@ if __name__ == "__main__":
     print("PAD_TOKEN_IDX:", PAD_TOKEN_IDX)
     print("SOS_TOKEN_IDX:", SOS_TOKEN_IDX)
     print("EOS_TOKEN_IDX:", EOS_TOKEN_IDX)
+
 
