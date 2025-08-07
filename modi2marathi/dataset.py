@@ -5,6 +5,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 import torch
 from torchvision.transforms import functional as TF
+import torch.nn.functional as F
 
 # ========== ✅ Config Imports ==========
 from config import (
@@ -62,27 +63,34 @@ class ModiOCRDataset(Dataset):
 
 # ========== ✅ Collate Function ==========
 class PadCollate:
-    def __init__(self, pad_token, sos_token, eos_token):
+    def __init__(self, pad_token=None, sos_token=None, eos_token=None):
         self.pad_token = pad_token
         self.sos_token = sos_token
         self.eos_token = eos_token
 
+
     def __call__(self, batch):
-        images, labels = zip(*batch)
+        images = [item["image"] for item in batch]
+        labels = [item["label"] for item in batch]
+        image_names = [item["image_name"] for item in batch]
+
+        # Stack image tensors
         images = torch.stack(images)
 
+        # Pad label sequences
         max_len = max(len(label) for label in labels)
         padded_labels = []
-
         for label in labels:
-            # Add <sos> and <eos> tokens
-            label = [self.sos_token] + label + [self.eos_token]
-            pad_length = max_len + 2 - len(label)
-            padded = label + [self.pad_token] * pad_length
-            padded_labels.append(torch.tensor(padded, dtype=torch.long))
+            padded = F.pad(label, (0, max_len - len(label)), value=self.pad_token)
+            padded_labels.append(padded)
+        labels = torch.stack(padded_labels)
 
-        padded_labels = torch.stack(padded_labels)
-        return images, padded_labels
+        return {
+            "image": images,        # [B, 1, H, W]
+            "label": labels,        # [B, T]
+            "image_name": image_names
+        }
+
 
 # ========== ✅ Resize + Pad Image (Keep Aspect) ==========
 class ResizeKeepAspect:
@@ -103,4 +111,3 @@ class ResizeKeepAspect:
             img = TF.crop(img, 0, 0, self.target_height, self.max_width)
 
         return TF.to_tensor(img)
-
