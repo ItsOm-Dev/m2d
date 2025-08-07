@@ -40,19 +40,22 @@ class ModiOCRDataset(Dataset):
     def __getitem__(self, idx):
         image_file = self.image_files[idx]
         img_path = os.path.join(self.image_dir, image_file)
-
+    
         label_file = os.path.splitext(image_file)[0] + ".txt"
         label_path = os.path.join(self.label_dir, label_file)
-
+    
         image = Image.open(img_path).convert("L")
         image = self.transform(image) if self.transform else transforms.ToTensor()(image)
-
+    
         with open(label_path, "r", encoding="utf-8") as f:
             text = f.read().strip()
-
+    
         # ✅ Encode label with <sos> and <eos>
         label = [self.sos_idx] + [self.char_to_idx.get(c, self.pad_idx) for c in text] + [self.eos_idx]
         label = label[:MAX_LABEL_LENGTH]  # Truncate if needed
+
+    # return image, torch.tensor(label, dtype=torch.long)
+
 
         return {
             "image": image,
@@ -111,3 +114,4 @@ class ResizeKeepAspect:
             img = TF.crop(img, 0, 0, self.target_height, self.max_width)
 
         return TF.to_tensor(img)
+
